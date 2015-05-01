@@ -26,6 +26,11 @@ java)
     run_cmd="java $file_name_no_ext"
     execname=$file_name_no_ext.class
     ;;
+py)
+    bld_cmd=1
+    run_cmd="python $file_name"
+    execname=$file_name
+    ;;
 esac
 
 echo ""

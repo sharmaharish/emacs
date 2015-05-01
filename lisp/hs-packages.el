@@ -17,15 +17,22 @@
 (defconst enable-slime t)
 (defconst enable-sqlplus nil)
 (defconst enable-w3m nil)
-(defconst enable-yasnippet nil)
+(defconst enable-yasnippet t)
 (defconst enable-ido t)
 (defconst enable-erlang t)
 (defconst enable-paredit t)
 (defconst enable-geiser t)
+(defconst enable-ag t)
 
 (defconst package-root (prefix-home "packages/"))
 
 (add-to-list 'load-path package-root)
+
+(when enable-ag
+  (add-to-list 'load-path (concat package-root "dash"))
+  (add-to-list 'load-path (concat package-root "s"))
+  (add-to-list 'load-path (concat package-root "ag"))
+  (require 'ag))
 
 (when enable-erlang
   (setq load-path (cons "/usr/local/lib/erlang/lib/tools-2.7/emacs" load-path))
