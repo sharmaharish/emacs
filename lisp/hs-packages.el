@@ -23,10 +23,16 @@
 (defconst enable-paredit t)
 (defconst enable-geiser t)
 (defconst enable-ag t)
+(defconst enable-company t)
 
 (defconst package-root (prefix-home "packages/"))
 
 (add-to-list 'load-path package-root)
+
+(when enable-company
+  (add-to-list 'load-path (concat package-root "company-mode"))
+  (require 'company)
+  (add-hook 'after-init-hook 'global-company-mode))
 
 (when enable-ag
   (add-to-list 'load-path (concat package-root "dash"))
