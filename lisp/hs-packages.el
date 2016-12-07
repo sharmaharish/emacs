@@ -1,27 +1,24 @@
 (require 'cl)
 (require 'filecache)
 
-(defconst enable-autocomplete nil)
+(defconst enable-autocomplete t)
 (defconst enable-cedet nil)
-(defconst enable-clojure nil)
+(defconst enable-clojure t)
 (defconst enable-ensime nil)
-(defconst enable-git nil)
 (defconst enable-go nil)
 (defconst enable-gtags nil)
 (defconst enable-haskell nil)
-(defconst enable-jde nil)
 (defconst enable-magit t)
-(defconst enable-org nil)
-(defconst enable-psvn nil)
+(defconst enable-org t)
 (defconst enable-scala nil)
-(defconst enable-slime t)
+(defconst enable-slime nil)
 (defconst enable-sqlplus nil)
 (defconst enable-w3m nil)
 (defconst enable-yasnippet t)
 (defconst enable-ido t)
-(defconst enable-erlang t)
+(defconst enable-erlang nil)
 (defconst enable-paredit t)
-(defconst enable-geiser t)
+(defconst enable-geiser nil)
 (defconst enable-ag t)
 (defconst enable-company t)
 
@@ -45,16 +42,6 @@
   (setq erlang-root-dir "/usr/local/lib/erlang")
   (setq exec-path (cons "/usr/local/lib/erlang/bin" exec-path))
   (require 'erlang-start))
-
-;; psvn package settings
-(when enable-psvn
-  (require 'psvn))
-
-;; git package settings
-(when enable-git
-  (add-to-list 'load-path "/usr/share/doc/git-core/contrib/emacs")
-  (require 'git)
-  (require 'git-blame))
 
 ;; sqlplus package settings
 (when enable-sqlplus
@@ -117,11 +104,6 @@
   (setq org-log-done t)
   (setq org-agenda-files (prefix-home "/todo.org")))
 
-;; jde package
-(when enable-jde
-  (add-to-list 'load-path (expand-file-name (concat package-root "jde/lisp")))
-  (require 'jde))
-
 ;; haskell mode
 (when enable-haskell
   (load "/usr/share/emacs/site-lisp/haskell-mode/haskell-site-file")
@@ -135,7 +117,7 @@
   (require 'scala-mode-auto))
 
 (when enable-clojure
-  (add-to-list 'load-path package-root)
+  (add-to-list 'load-path (concat package-root "clojure-mode"))
   (require 'clojure-mode))
 
 (when enable-ensime
@@ -165,6 +147,7 @@
 
 (when enable-autocomplete
   (add-to-list 'load-path (concat package-root "auto-complete"))
+  (add-to-list 'load-path (concat package-root "popup"))
   (require 'auto-complete-config)
   (add-to-list 'ac-dictionary-directories (prefix-home "auto-complete/dict"))
   (ac-config-default))
@@ -173,7 +156,8 @@
   (require 'go-mode))
 
 (when enable-magit
-  (add-to-list 'load-path (concat package-root "magit"))
+  (add-to-list 'load-path (concat package-root "magit/lisp"))
+  (add-to-list 'load-path (concat package-root "with-editor"))
   (require 'magit)
   (defalias 'ms 'magit-status))
 
@@ -184,6 +168,7 @@
   (setq ido-everywhere t))
 
 (when enable-paredit
+  (add-to-list 'load-path (concat package-root "paredit"))
   (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code" t)
   (require 'paredit)
   (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
