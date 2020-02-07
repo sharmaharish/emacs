@@ -151,7 +151,7 @@
 (setq display-time-day-and-date t)
 (display-time)
 
-(set-foreground-color "grey")
-(set-background-color "grey10")
-(set-cursor-color "grey")
-(setq frame-title-format "%b")
+;; (set-foreground-color "grey")
+;; (set-background-color "grey10")
+;; (set-cursor-color "grey")
+;; (setq frame-title-format "%b")
