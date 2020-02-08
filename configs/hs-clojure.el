@@ -5,7 +5,7 @@
   '(paredit                                ;; makes handling lisp expression much easier
     clojure-mode                           ;; key bindings and code colorization for Clojure
     clojure-mode-extra-font-locking        ;; extra syntax highlighting for clojure
-    ;; cider                                  ;; integration with a Clojure REPL
+    cider                                  ;; integration with a Clojure REPL
     rainbow-delimiters                     ;; colorful parenthesis matching
     ))
 
