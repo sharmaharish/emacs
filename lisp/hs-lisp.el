@@ -1,3 +1,17 @@
+;; The packages you want installed. You can also install these
+;; manually with M-x package-install
+;; Add in your own as you wish:
+(defvar my-packages
+  '(paredit              ;; makes handling lisp expression much easier
+    rainbow-delimiters   ;; colorful parenthesis matching
+    slime                ;; superior mode for lisp
+    geiser               ;; superior mode for scheme
+    ))
+
+(dolist (p my-packages)
+  (when (not (package-installed-p p))
+    (package-install p)))
+
 ;; Automatically load paredit when editing a lisp file
 ;; More at http://www.emacswiki.org/emacs/ParEdit
 (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)

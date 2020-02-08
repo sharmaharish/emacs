@@ -7,7 +7,8 @@
 (require 'package)
 
 ;; (add-to-list 'package-archives '("tromey" . "http://tromey.com/elpa/") t)
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+;; (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+;; (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 
 (add-to-list 'package-pinned-packages '(cider . "melpa-stable") t)
@@ -29,42 +30,14 @@
 ;; manually with M-x package-install
 ;; Add in your own as you wish:
 (defvar my-packages
-  '(;; makes handling lisp expressions much, much easier
-    ;; Cheatsheet: http://www.emacswiki.org/emacs/PareditCheatsheet
-    paredit
-
-    ;; key bindings and code colorization for Clojure
-    ;; https://github.com/clojure-emacs/clojure-mode
-    clojure-mode
-
-    ;; extra syntax highlighting for clojure
-    clojure-mode-extra-font-locking
-
-    ;; integration with a Clojure REPL
-    ;; https://github.com/clojure-emacs/cider
-    cider
-
-    ;; allow ido usage in as many contexts as possible. see
-    ;; customizations/navigation.el line 23 for a description
-    ;; of ido
-    ido-completing-read+
-
-    ;; Enhances M-x to allow easier execution of commands. Provides
-    ;; a filterable list of possible commands in the minibuffer
-    ;; http://www.emacswiki.org/emacs/Smex
-    smex
-
-    ;; project navigation
-    projectile
-
-    ;; colorful parenthesis matching
-    rainbow-delimiters
-
-    ;; edit html tags like sexps
-    tagedit
-
-    ;; git integration
-    magit))
+  '(ido-completing-read+  ;; allow ido usage in as many contexts as possible, see hs-default.el
+    smex                  ;; enhances M-x to allow easier execution of commands
+    projectile            ;; project navigation
+    magit
+    ;; zenburn               ;; zenburn theme
+    ;; material              ;; material dark theme
+    better-defaults       ;; better default options
+    ))
 
 ;; On OS X, an Emacs instance started from the graphical user
 ;; interface will have a different environment than a shell in a
@@ -81,7 +54,6 @@
   (when (not (package-installed-p p))
     (package-install p)))
 
-;; (defconst emacs-home (concat (getenv "HOME") "/.emacs.d"))
 (defun prefix-home (path) (concat user-emacs-directory path))
 
 (add-to-list 'load-path (prefix-home "lisp"))
@@ -153,7 +125,7 @@
  '(current-language-environment "Latin-1")
  '(custom-safe-themes
    (quote
-    ("84890723510d225c45aaff941a7e201606a48b973f0121cb9bcb0b9399be8cba" default)))
+    ("a24c5b3c12d147da6cef80938dca1223b7c7f70f2f382b26308eba014dc4833a" "84890723510d225c45aaff941a7e201606a48b973f0121cb9bcb0b9399be8cba" default)))
  '(dabbrev-case-fold-search (quote case-fold-search))
  '(dapprev-case-replace nil)
  '(default-input-method "latin-1-prefix")
@@ -179,7 +151,7 @@
  '(next-line-add-newlines nil)
  '(package-selected-packages
    (quote
-    (tramp ac-cider ac-geiser ac-ispell ac-slime adjust-parens ag alarm-clock auto-complete cider cider-eval-sexp-fu clj-refactor clojure-mode clojure-mode-extra-font-locking dash-functional elpy flycheck flycheck-clojure flycheck-joker flylisp function-args geiser gnugo hackernews html-to-markdown htmlize ido-at-point ido-yes-or-no idomenu imenu-anywhere imenu-list inf-clojure ipython-shell-send javadoc-lookup live-py-mode magit magit-find-file markdown-mode markdown-preview-mode markdown-toc memoize pabbrev paren-face popup-imenu popwin python-mode rubik s scratch shell-switcher shell-toggle smartparens sotclojure sotlisp zenburn-theme flymake dash csv-mode company auto-correct async)))
+    (python-black material-theme ein tramp ac-cider ac-geiser ac-ispell ac-slime adjust-parens ag alarm-clock auto-complete cider cider-eval-sexp-fu clj-refactor clojure-mode clojure-mode-extra-font-locking dash-functional elpy flycheck flycheck-clojure flycheck-joker flylisp function-args geiser gnugo hackernews html-to-markdown htmlize ido-at-point ido-yes-or-no idomenu imenu-anywhere imenu-list inf-clojure ipython-shell-send javadoc-lookup live-py-mode magit magit-find-file markdown-mode markdown-preview-mode markdown-toc memoize pabbrev paren-face popup-imenu popwin python-mode rubik s scratch shell-switcher shell-toggle smartparens sotclojure sotlisp zenburn-theme flymake dash csv-mode company auto-correct async)))
  '(query-replace-highlight t)
  '(require-final-newline t)
  '(save-abbrevs t)
