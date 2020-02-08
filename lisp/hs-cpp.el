@@ -1,7 +1,3 @@
-;; -----------------------------------------------------------------------------
-;; FUNCTIONS
-;; -----------------------------------------------------------------------------
-
 ;; 90aebf38-b33a-314b-1198-c9bffea2f2a2
 (defun uuid-create ()
   "Return a newly generated UUID. This uses a simple hashing of variable data."
@@ -28,21 +24,6 @@
   "Inserts a new UUID at the point."
   (interactive)
   (insert (upcase (uuid-create))))
-
-;;
-(defun indent-buffer()
-  "Indent the whole buffer from point-min to point-max using the command indent-region"
-  (interactive)
-  (indent-region 0 (point-max) nil))
-
-;;
-(defun goto-match-paren (arg)
-  "Go to the matching parenthesis if on parenthesis, otherwise insert %.
-vi style of % jumping to matching brace."
-  (interactive "p")
-  (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
-        ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
-        (t (self-insert-command (or arg 1)))))
 
 ;; Switch fromm *.<impl> to *.<head> and vice versa
 (defun toggle-source-header ()
@@ -108,45 +89,29 @@ vi style of % jumping to matching brace."
   (let ((cmd "astyle --style=allman -s4 -Y -f -p -H -y -O -o -k1 -W1 -U --mode=c -z2"))
     (shell-command-on-region (point-min) (point-max) cmd (current-buffer) t)))
 
-;;
-(defun my-list-buffers ()
-  (interactive)
-  (list-buffers)
-  (other-window 1))
+(defun c-cpp-settings ()
+        ;; set gtags-mode for c/c++ files
+        ;;(gtags-mode 1))
+        (setq compilation-read-command nil)
+        (local-set-key (kbd "<f5>") 'compile)
+        (set (make-local-variable 'compile-command)
+             (concat (prefix-home "scripts/runp ") buffer-file-name)))
 
-;; sets the file coding system to unix
-(defun set-unix-file-coding-system ()
-  (interactive)
-  (set-buffer-file-coding-system 'unix))
+(add-hook 'c-mode-hook 'c-cpp-settings)
+(add-hook 'c++-mode-hook 'c-cpp-settings)
 
-(defun track-shell-directory/procfs ()
-  (shell-dirtrack-mode 0)
-  (add-hook 'comint-preoutput-filter-functions
-            (lambda (str)
-              (prog1 str
-                (when (string-match comint-prompt-regexp str)
-                  (cd (file-symlink-p
-                       (format "/proc/%s/cwd" (process-id
-                                               (get-buffer-process
-                                                (current-buffer)))))))))
-            nil t))
-
-;;
-(defun file-cache-save-cache-to-file (file)
-  "Save contents of `file-cache-alist' to FILE.
-For later retrieval using `file-cache-read-cache-from-file'"
-  (interactive "FFile: ")
-  (with-temp-file (expand-file-name file)
-    (prin1 file-cache-alist (current-buffer))))
-
-;;
-(defun file-cache-read-cache-from-file (file)
-  "Clear `file-cache-alist' and read cache from FILE.
-  The file cache can be saved to a file using
-  `file-cache-save-cache-to-file'."
-  (interactive "fFile: ")
-  (file-cache-clear-cache)
-  (save-excursion
-    (set-buffer (find-file-noselect file))
-    (beginning-of-buffer)
-    (setq file-cache-alist (read (current-buffer)))))
+;; gud-mode (debugging with gdb)
+(add-hook 'gud-mode-hook
+          '(lambda ()
+             (local-set-key [home] ; move to beginning of line, after prompt
+                            'comint-bol)
+             (local-set-key [up] ; cycle backward through command history
+                            '(lambda () (interactive)
+                               (if (comint-after-pmark-p)
+                                   (comint-previous-input 1)
+                                 (previous-line 1))))
+             (local-set-key [down] ; cycle forward through command history
+                            '(lambda () (interactive)
+                               (if (comint-after-pmark-p)
+                                   (comint-next-input 1)
+                                 (forward-line 1))))))

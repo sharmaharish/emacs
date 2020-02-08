@@ -81,14 +81,20 @@
   (when (not (package-installed-p p))
     (package-install p)))
 
-(defconst emacs-home (concat (getenv "HOME") "/.emacs.d"))
-(defun prefix-home (path) (concat emacs-home "/" path))
+;; (defconst emacs-home (concat (getenv "HOME") "/.emacs.d"))
+(defun prefix-home (path) (concat user-emacs-directory path))
 
 (add-to-list 'load-path (prefix-home "lisp"))
 
-;; (load "hs-packages.el")
-(load "hs-functions.el")
 (load "hs-default.el")
+(load "hs-shell.el")
+(load "hs-lisp.el")
+(load "hs-org.el")
+(load "hs-cpp.el")
+(load "hs-java.el")
+(load "hs-python.el")
+(load "hs-clojure.el")
+;; (load "hs-packages.el")
 
 (shell)
 
@@ -100,7 +106,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(auto-compression-mode t nil (jka-compr))
- '(backup-directory-alist (quote (("." . "/Users/harish/.emacs.d/bakup"))))
+ '(backup-directory-alist (quote (("." . "/Users/harish/.emacs.d/backup"))))
  '(backward-delete-char-untabify-method (quote hungry))
  '(c-basic-offset 4)
  '(c-cleanup-list (quote (scope-operator compact-empty-funcall)))
