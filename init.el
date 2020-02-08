@@ -6,10 +6,8 @@
 
 (require 'package)
 
-;; (add-to-list 'package-archives '("tromey" . "http://tromey.com/elpa/") t)
-;; (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
-;; (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 
 (add-to-list 'package-pinned-packages '(cider . "melpa-stable") t)
 (add-to-list 'package-pinned-packages '(magit . "melpa-stable") t)
@@ -34,8 +32,8 @@
     smex                  ;; enhances M-x to allow easier execution of commands
     projectile            ;; project navigation
     magit
-    ;; zenburn               ;; zenburn theme
-    ;; material              ;; material dark theme
+    zenburn-theme         ;; zenburn theme
+    material-theme        ;; material dark theme
     better-defaults       ;; better default options
     ))
 
@@ -56,7 +54,7 @@
 
 (defun prefix-home (path) (concat user-emacs-directory path))
 
-(add-to-list 'load-path (prefix-home "lisp"))
+(add-to-list 'load-path (prefix-home "configs"))
 
 (load "hs-default.el")
 (load "hs-shell.el")
@@ -66,7 +64,7 @@
 (load "hs-java.el")
 (load "hs-python.el")
 (load "hs-clojure.el")
-;; (load "hs-packages.el")
+(load "hs-packages.el")
 
 (shell)
 
@@ -78,43 +76,42 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(auto-compression-mode t nil (jka-compr))
- '(backup-directory-alist (quote (("." . "/Users/harish/.emacs.d/backup"))))
  '(backward-delete-char-untabify-method (quote hungry))
  '(c-basic-offset 4)
  '(c-cleanup-list (quote (scope-operator compact-empty-funcall)))
  '(c-comment-prefix-regexp
    (quote
-    ((c-mode . "//+\\|\\**")
-     (c++-mode . "//+\\|\\**")
-     (java-mode . "//+\\|\\**")
-     (pike-mode . "//+!?\\|\\**")
-     (awk-mode . "#+")
-     (other . "//+\\|\\**"))))
+	((c-mode . "//+\\|\\**")
+	 (c++-mode . "//+\\|\\**")
+	 (java-mode . "//+\\|\\**")
+	 (pike-mode . "//+!?\\|\\**")
+	 (awk-mode . "#+")
+	 (other . "//+\\|\\**"))))
  '(c-default-style
    (quote
-    ((c++-mode . "stroustrup")
-     (java-mode . "java")
-     (awk-mode . "awk")
-     (other . "gnu"))))
+	((c++-mode . "stroustrup")
+	 (java-mode . "java")
+	 (awk-mode . "awk")
+	 (other . "gnu"))))
  '(c-doc-comment-style
    (quote
-    ((c-mode . gtkdoc)
-     (c++-mode . gtkdoc)
-     (java-mode . javadoc)
-     (pike-mode . autodoc))))
+	((c-mode . gtkdoc)
+	 (c++-mode . gtkdoc)
+	 (java-mode . javadoc)
+	 (pike-mode . autodoc))))
  '(c-hanging-braces-alist (quote set-from-style))
  '(c-hungry-delete-key t t)
  '(c-ignore-auto-fill (quote (string cpp code)))
  '(c-offsets-alist
    (quote
-    ((inline-open . 0)
-     (case-label . +)
-     (innamespace . 0))))
+	((inline-open . 0)
+	 (case-label . +)
+	 (innamespace . 0))))
  '(calendar-date-style (quote iso))
- '(calendar-daylight-time-zone-name "SGT")
+ '(calendar-daylight-time-zone-name "EST")
  '(calendar-latitude [1 22 north])
  '(calendar-longitude [103 45 east])
- '(calendar-standard-time-zone-name "SGT")
+ '(calendar-standard-time-zone-name "EST")
  '(calendar-time-zone 480)
  '(case-fold-search t)
  '(column-number-mode t)
@@ -125,7 +122,7 @@
  '(current-language-environment "Latin-1")
  '(custom-safe-themes
    (quote
-    ("a24c5b3c12d147da6cef80938dca1223b7c7f70f2f382b26308eba014dc4833a" "84890723510d225c45aaff941a7e201606a48b973f0121cb9bcb0b9399be8cba" default)))
+	("a24c5b3c12d147da6cef80938dca1223b7c7f70f2f382b26308eba014dc4833a" "84890723510d225c45aaff941a7e201606a48b973f0121cb9bcb0b9399be8cba" default)))
  '(dabbrev-case-fold-search (quote case-fold-search))
  '(dapprev-case-replace nil)
  '(default-input-method "latin-1-prefix")
@@ -133,17 +130,16 @@
  '(display-time-mode t nil (time))
  '(display-time-world-list
    (quote
-    (("America/Los_Angeles" "Seattle")
-     ("America/New_York" "New York")
-     ("Europe/London" "London")
-     ("Asia/Calcutta" "New Delhi")
-     ("Asia/Tokyo" "Tokyo")
-     ("Asia/Singapore" "Singapore"))))
+	(("America/Los_Angeles" "Seattle")
+	 ("America/New_York" "New York")
+	 ("Europe/London" "London")
+	 ("Asia/Calcutta" "New Delhi")
+	 ("Asia/Tokyo" "Tokyo")
+	 ("Asia/Singapore" "Singapore"))))
  '(electric-indent-mode t)
  '(font-use-system-font t)
  '(global-hl-line-mode t)
  '(hl-line-sticky-flag t)
- '(indent-tabs-mode nil)
  '(inhibit-startup-screen t)
  '(kill-whole-line t)
  '(large-file-warning-threshold nil)
@@ -151,18 +147,15 @@
  '(next-line-add-newlines nil)
  '(package-selected-packages
    (quote
-    (python-black material-theme ein tramp ac-cider ac-geiser ac-ispell ac-slime adjust-parens ag alarm-clock auto-complete cider cider-eval-sexp-fu clj-refactor clojure-mode clojure-mode-extra-font-locking dash-functional elpy flycheck flycheck-clojure flycheck-joker flylisp function-args geiser gnugo hackernews html-to-markdown htmlize ido-at-point ido-yes-or-no idomenu imenu-anywhere imenu-list inf-clojure ipython-shell-send javadoc-lookup live-py-mode magit magit-find-file markdown-mode markdown-preview-mode markdown-toc memoize pabbrev paren-face popup-imenu popwin python-mode rubik s scratch shell-switcher shell-toggle smartparens sotclojure sotlisp zenburn-theme flymake dash csv-mode company auto-correct async)))
+	(idea-darkula-theme intellij-theme python-black material-theme ein tramp ac-cider ac-geiser ac-ispell ac-slime adjust-parens ag alarm-clock auto-complete cider cider-eval-sexp-fu clj-refactor clojure-mode clojure-mode-extra-font-locking dash-functional elpy flycheck flycheck-clojure flycheck-joker flylisp function-args geiser gnugo hackernews html-to-markdown htmlize ido-at-point ido-yes-or-no idomenu imenu-anywhere imenu-list inf-clojure ipython-shell-send javadoc-lookup live-py-mode magit magit-find-file markdown-mode markdown-preview-mode markdown-toc memoize pabbrev paren-face popup-imenu popwin python-mode rubik s scratch shell-switcher shell-toggle smartparens sotclojure sotlisp zenburn-theme flymake dash csv-mode company auto-correct async)))
  '(query-replace-highlight t)
- '(require-final-newline t)
  '(save-abbrevs t)
- '(scheme-program-name "guile")
  '(search-highlight t)
  '(show-paren-mode t nil (paren))
  '(size-indication-mode t)
  '(split-width-threshold nil)
  '(subword-mode t t)
  '(tab-width 4)
- '(tool-bar-mode nil)
  '(truncate-lines nil)
  '(uniquify-buffer-name-style (quote reverse) nil (uniquify)))
 (custom-set-faces

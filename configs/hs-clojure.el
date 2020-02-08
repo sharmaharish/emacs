@@ -1,15 +1,15 @@
 ;; The packages you want installed. You can also install these
 ;; manually with M-x package-install
 ;; Add in your own as you wish:
-(defvar my-packages
+(defvar my-clojure-packages
   '(paredit                                ;; makes handling lisp expression much easier
     clojure-mode                           ;; key bindings and code colorization for Clojure
     clojure-mode-extra-font-locking        ;; extra syntax highlighting for clojure
-    cider                                  ;; integration with a Clojure REPL
+    ;; cider                                  ;; integration with a Clojure REPL
     rainbow-delimiters                     ;; colorful parenthesis matching
     ))
 
-(dolist (p my-packages)
+(dolist (p my-clojure-packages)
   (when (not (package-installed-p p))
     (package-install p)))
 

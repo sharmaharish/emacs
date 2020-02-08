@@ -1,5 +1,3 @@
-(require 'saveplace)
-
 ;; -----------------------------------------------------------------------------
 ;; FUNCTIONS
 ;; -----------------------------------------------------------------------------
@@ -99,7 +97,6 @@ For later retrieval using `file-cache-read-cache-from-file'"
 (global-set-key (kbd "s-t") '(lambda () (interactive)))
 ;; Shows a list of buffers
 (global-set-key (kbd "C-x C-b") 'ibuffer)
-
 
 ;; -----------------------------------------------------------------------------
 ;; COMMAND ALIASES

@@ -1,19 +1,19 @@
-(require 'py-autopep8)
-
 ;; The packages you want installed. You can also install these
 ;; manually with M-x package-install
 ;; Add in your own as you wish:
-(defvar my-packages
+(defvar my-python-packages
   '(elpy             ;; emacs lisp python environment
     flycheck         ;; on the fly syntax checking
-    python-blacken   ;; black formattign on save for python code
+    blacken   ;; black formattign on save for python code
     py-autopep8      ;; run autopep8 on save
-    ein              ;; emacs IPython notebook
+    ;; ein              ;; emacs IPython notebook
     ))
 
-(dolist (p my-packages)
+(dolist (p my-python-packages)
   (when (not (package-installed-p p))
     (package-install p)))
+
+(require 'py-autopep8)
 
 (setq python-shell-interpreter "python3")
 
