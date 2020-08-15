@@ -52,6 +52,12 @@
   (when (not (package-installed-p p))
     (package-install p)))
 
+;; (unless (package-installed-p 'use-package)
+;;   (package-install 'use-package))
+;;
+;; (require 'use-package)
+;; (setq use-package-verbose t)
+
 (defun prefix-home (path) (concat user-emacs-directory path))
 
 (add-to-list 'load-path (prefix-home "configs"))
@@ -152,7 +158,7 @@
 	("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-	(idea-darkula-theme intellij-theme python-black material-theme ein tramp ac-cider ac-geiser ac-ispell ac-slime adjust-parens ag alarm-clock auto-complete cider cider-eval-sexp-fu clj-refactor clojure-mode clojure-mode-extra-font-locking dash-functional elpy flycheck flycheck-clojure flycheck-joker flylisp function-args geiser gnugo hackernews html-to-markdown htmlize ido-at-point ido-yes-or-no idomenu imenu-anywhere imenu-list inf-clojure ipython-shell-send javadoc-lookup live-py-mode magit magit-find-file markdown-mode markdown-preview-mode markdown-toc memoize pabbrev paren-face popup-imenu popwin python-mode rubik s scratch shell-switcher shell-toggle smartparens sotclojure sotlisp zenburn-theme flymake dash csv-mode company auto-correct async)))
+	(slime idea-darkula-theme intellij-theme python-black material-theme ein tramp ac-cider ac-geiser ac-ispell ac-slime adjust-parens ag alarm-clock auto-complete cider cider-eval-sexp-fu clj-refactor clojure-mode clojure-mode-extra-font-locking dash-functional elpy flycheck flycheck-clojure flycheck-joker flylisp function-args geiser gnugo hackernews html-to-markdown htmlize ido-at-point ido-yes-or-no idomenu imenu-anywhere imenu-list inf-clojure ipython-shell-send javadoc-lookup live-py-mode magit magit-find-file markdown-mode markdown-preview-mode markdown-toc memoize pabbrev paren-face popup-imenu popwin python-mode rubik s scratch shell-switcher shell-toggle smartparens sotclojure sotlisp zenburn-theme flymake dash csv-mode company auto-correct async)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(query-replace-highlight t)
  '(save-abbrevs t)

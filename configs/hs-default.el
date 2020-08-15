@@ -122,6 +122,7 @@ For later retrieval using `file-cache-read-cache-from-file'"
 
 (setq auto-save-default nil)
 (setq electric-indent-mode nil)
+(setq menu-bar-mode nil)
 
 (follow-mode t)
 

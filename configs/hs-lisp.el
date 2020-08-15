@@ -4,8 +4,8 @@
 (defvar my-lisp-packages
   '(paredit              ;; makes handling lisp expression much easier
     rainbow-delimiters   ;; colorful parenthesis matching
-    ;; slime                ;; superior mode for lisp
-    ;; geiser               ;; superior mode for scheme
+    slime                ;; superior mode for lisp
+    geiser               ;; superior mode for scheme
     ))
 
 (dolist (p my-lisp-packages)
