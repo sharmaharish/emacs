@@ -12,6 +12,12 @@
   (when (not (package-installed-p p))
     (package-install p)))
 
+;; syntax hilighting for midje
+(add-hook 'lisp-mode-hook
+          (lambda ()
+            (setq inferior-lisp-program "sbcl")
+			(rainbow-delimiters-mode)))
+
 ;; Automatically load paredit when editing a lisp file
 ;; More at http://www.emacswiki.org/emacs/ParEdit
 (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
