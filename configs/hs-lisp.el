@@ -33,3 +33,6 @@
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
+
+(setq common-lisp-hyperspec-root
+	  (concat "file://" (expand-file-name "~/Projects/clisp/HyperSpec/")))
