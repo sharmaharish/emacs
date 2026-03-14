@@ -28,7 +28,7 @@ java)
     ;;
 py)
     bld_cmd=1
-    run_cmd="python $file_name"
+    run_cmd="python3 $file_name"
     execname=$file_name
     ;;
 esac

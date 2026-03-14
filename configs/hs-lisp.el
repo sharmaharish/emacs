@@ -34,5 +34,9 @@
 (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
 
+(add-hook 'lisp-mode-hook (lambda () (slime-mode t)))
+(add-hook 'inferior-lisp-mode-hook (lambda () (inferior-slime-mode)))
+(slime-setup '(slime-fancy))
+
 (setq common-lisp-hyperspec-root
 	  (concat "file://" (expand-file-name "~/Projects/clisp/HyperSpec/")))

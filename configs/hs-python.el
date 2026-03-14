@@ -6,7 +6,7 @@
     flycheck         ;; on the fly syntax checking
     blacken   ;; black formattign on save for python code
     py-autopep8      ;; run autopep8 on save
-    ;; ein              ;; emacs IPython notebook
+	;; jedi
     ))
 
 (dolist (p my-python-packages)
@@ -15,24 +15,21 @@
 
 (require 'py-autopep8)
 
-(setq python-shell-interpreter "python3")
+(setq python-shell-interpreter "python")
 
 (elpy-enable)
-
-;; Use IPython for REPL
-;; (setq python-shell-interpreter "jupyter"
-;;       python-shell-interpreter-args "console --simple-prompt"
-;;       python-shell-prompt-detect-failure-warning nil)
-;;
-;; (add-to-list 'python-shell-completion-native-disabled-interpreters "jupyter")
 
 ;; Enable Flycheck
 (when (require 'flycheck nil t)
   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
   (add-hook 'elpy-mode-hook 'flycheck-mode))
 
+;; (add-hook 'python-mode-hook 'jedi:setup)
+
 ;; Enable autopep8
 (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+
+(add-hook 'elpy-mode-hook (lambda () (highlight-indentation-mode -1)))
 
 (add-hook 'python-mode-hook
           (lambda ()
