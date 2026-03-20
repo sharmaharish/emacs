@@ -4,180 +4,201 @@
 ;;  |__|__|__ /       \___|_| |_| |_|\__,_|\___|___/
 ;;
 
+;; --------------------------------------------------
+;; Package System
+;; --------------------------------------------------
+
 (require 'package)
 
-(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+(setq package-archives
+      '(("gnu"    . "https://elpa.gnu.org/packages/")
+        ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+        ("melpa"  . "https://melpa.org/packages/")))
 
-(add-to-list 'package-pinned-packages '(cider . "melpa-stable") t)
-(add-to-list 'package-pinned-packages '(magit . "melpa-stable") t)
-
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
 (package-initialize)
 
-;; Download the ELPA archive description if needed.
-;; This informs Emacs about the latest versions of all packages, and
-;; makes them available for download.
-(when (not package-archive-contents)
+(unless package-archive-contents
   (package-refresh-contents))
 
-;; The packages you want installed. You can also install these
-;; manually with M-x package-install
-;; Add in your own as you wish:
-(defvar my-packages
-  '(ido-completing-read+  ;; allow ido usage in as many contexts as possible, see hs-default.el
-    smex                  ;; enhances M-x to allow easier execution of commands
-    projectile            ;; project navigation
-    company
-    magit
-    zenburn-theme         ;; zenburn theme
-    material-theme        ;; material dark theme
-    ))
+;; --------------------------------------------------
+;; use-package bootstrap
+;; --------------------------------------------------
 
-;; On OS X, an Emacs instance started from the graphical user
-;; interface will have a different environment than a shell in a
-;; terminal window, because OS X does not run a shell during the
-;; login. Obviously this will lead to unexpected results when
-;; calling external utilities like make from Emacs.
-;; This library works around this problem by copying important
-;; environment variables from the user's shell.
-;; https://github.com/purcell/exec-path-from-shell
-(if (eq system-type 'darwin)
-    (add-to-list 'my-packages 'exec-path-from-shell))
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
 
-(dolist (p my-packages)
-  (when (not (package-installed-p p))
-    (package-install p)))
+(require 'use-package)
+(setq use-package-always-ensure t)
 
-;; (unless (package-installed-p 'use-package)
-;;   (package-install 'use-package))
-;;
-;; (require 'use-package)
-;; (setq use-package-verbose t)
+;; --------------------------------------------------
+;; Load custom file separately
+;; --------------------------------------------------
 
-(defun prefix-home (path) (concat user-emacs-directory path))
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file 'noerror)
 
-(add-to-list 'load-path (prefix-home "configs"))
+;; --------------------------------------------------
+;; Config directory
+;; --------------------------------------------------
 
-(load "hs-default.el")
-(load "hs-shell.el")
-(load "hs-lisp.el")
-;; (load "hs-org.el")
-;; (load "hs-cpp.el")
-;; (load "hs-java.el")
-(load "hs-python.el")
-;; (load "hs-clojure.el")
-;; (load "hs-javascript.el")
-;; (load "hs-typescript.el")
-(load "hs-rust.el")
+(add-to-list 'load-path
+             (expand-file-name "configs" user-emacs-directory))
 
-(shell)
+;; (require 'hs-default)
+;; (require 'hs-shell)
+;; (require 'hs-lisp)
+;; (require 'hs-python)
 
-(load-theme 'zenburn t)
+;; --------------------------------------------------
+;; UI / Defaults
+;; --------------------------------------------------
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(auto-compression-mode t nil (jka-compr))
- '(backward-delete-char-untabify-method 'hungry)
- '(c-basic-offset 4)
- '(c-cleanup-list '(scope-operator compact-empty-funcall))
- '(c-comment-prefix-regexp
-   '((c-mode . "//+\\|\\**") (c++-mode . "//+\\|\\**")
-	 (java-mode . "//+\\|\\**") (pike-mode . "//+!?\\|\\**")
-	 (awk-mode . "#+") (other . "//+\\|\\**")))
- '(c-default-style
-   '((c++-mode . "stroustrup") (java-mode . "java") (awk-mode . "awk")
-	 (other . "gnu")))
- '(c-doc-comment-style
-   '((c-mode . gtkdoc) (c++-mode . gtkdoc) (java-mode . javadoc)
-	 (pike-mode . autodoc)))
- '(c-hanging-braces-alist 'set-from-style)
- '(c-hungry-delete-key t t)
- '(c-ignore-auto-fill '(string cpp code))
- '(c-offsets-alist '((inline-open . 0) (case-label . +) (innamespace . 0)))
- '(calendar-date-style 'iso)
- '(calendar-daylight-time-zone-name "PST")
- '(calendar-latitude [1 22 north])
- '(calendar-longitude [103 45 east])
- '(calendar-standard-time-zone-name "PST")
- '(calendar-time-zone 480)
- '(case-fold-search t)
- '(column-number-mode t)
- '(comint-buffer-maximum-size 10240)
- '(comment-empty-lines ''eol)
- '(company-quickhelp-color-background "#4F4F4F")
- '(company-quickhelp-color-foreground "#DCDCCC")
- '(compilation-ask-about-save nil)
- '(compilation-auto-jump-to-first-error t)
- '(current-language-environment "Latin-1")
- '(custom-safe-themes
-   '("985e4428a49e4f9ec5c02f981ca47d9825168ca4ed06aa0bf58e9e500ea3168b"
-	 "db86c52e18460fe10e750759b9077333f9414ed456dc94473f9cf188b197bc74"
-	 "7aaee3a00f6eb16836f5b28bdccde9e1079654060d26ce4b8f49b56689c51904"
-	 "732b807b0543855541743429c9979ebfb363e27ec91e82f463c91e68c772f6e3"
-	 "a24c5b3c12d147da6cef80938dca1223b7c7f70f2f382b26308eba014dc4833a"
-	 "84890723510d225c45aaff941a7e201606a48b973f0121cb9bcb0b9399be8cba"
-	 default))
- '(dabbrev-case-fold-search 'case-fold-search)
- '(dapprev-case-replace nil)
- '(default-input-method "latin-1-prefix")
- '(display-time-24hr-format t)
- '(display-time-mode t nil (time))
- '(electric-indent-mode t)
- '(elpy-rpc-python-command "python3")
- '(font-use-system-font t)
- '(global-hl-line-mode t)
- '(global-hl-line-sticky-flag t)
- '(hl-line-sticky-flag t)
- '(inhibit-startup-screen t)
- '(kill-whole-line t)
- '(large-file-warning-threshold nil)
- '(message-log-max 512)
- '(next-line-add-newlines nil)
- '(nrepl-message-colors
-   '("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3"
-	 "#94BFF3" "#DC8CC3"))
- '(package-selected-packages
-   '(ac-cider ac-geiser ac-ispell ac-slime adjust-parens ag alarm-clock
-			  async auto-complete auto-correct cider
-			  cider-eval-sexp-fu clj-refactor clojure-mode
-			  clojure-mode-extra-font-locking company csv-mode dash
-			  dash-functional ein elpy flycheck flycheck-clojure
-			  flycheck-joker flylisp flymake function-args geiser
-			  gnugo hackernews html-to-markdown htmlize
-			  idea-darkula-theme ido-at-point ido-yes-or-no idomenu
-			  imenu-anywhere imenu-list inf-clojure intellij-theme
-			  ipython-shell-send javadoc-lookup jedi live-py-mode
-			  lua-mode magit magit-find-file markdown-mode
-			  markdown-preview-mode markdown-toc material-theme
-			  memoize pabbrev paren-face popup-imenu popwin
-			  python-black python-mode rubik rust-mode s scratch
-			  shell-switcher shell-toggle slime smartparens sotclojure
-			  sotlisp tramp zenburn-theme))
- '(pdf-view-midnight-colors '("#DCDCCC" . "#383838"))
- '(query-replace-highlight t)
- '(save-abbrevs t)
- '(search-highlight t)
- '(show-paren-mode t nil (paren))
- '(size-indication-mode t)
- '(split-width-threshold nil)
- '(subword-mode t t)
- '(tab-width 4)
- '(truncate-lines nil)
- '(uniquify-buffer-name-style 'reverse nil (uniquify))
- '(world-clock-list
-   '(("America/Los_Angeles" "Seattle") ("America/New_York" "New York")
-	 ("Europe/London" "London") ("Asia/Calcutta" "New Delhi")
-	 ("Asia/Tokyo" "Tokyo") ("Asia/Singapore" "Singapore"))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(hl-line ((t (:extend t :background "gray36")))))
+(global-hl-line-mode 1)
+(column-number-mode 1)
+
+;; --------------------------------------------------
+;; Theme
+;; --------------------------------------------------
+
+(use-package zenburn-theme
+  :config
+  (load-theme 'zenburn t))
+
+;; --------------------------------------------------
+;; Completion (modern stack)
+;; --------------------------------------------------
+
+(use-package vertico
+  :init
+  (vertico-mode))
+
+(use-package orderless
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-defaults nil))
+
+(use-package marginalia
+  :init
+  (marginalia-mode))
+
+(use-package consult
+  :bind (("C-s" . consult-line)
+         ("M-y" . consult-yank-pop)
+         ("C-x b" . consult-buffer)))
+;;         ("M-x" . consult-M-x)))
+
+;; --------------------------------------------------
+;; In-buffer completion
+;; --------------------------------------------------
+
+(use-package corfu
+  :custom
+  (corfu-auto t)
+  (corfu-auto-delay 0.2)
+  (corfu-auto-prefix 2)
+  ;; Terminal-specific settings - these ARE the correct variables
+  (corfu-popupinfo-mode nil)  ; Disable popup info in terminal
+  (corfu-min-width 25)
+  (corfu-max-width 80)
+  (corfu-count 10)
+  ;; Make Corfu work better in terminal
+  (corfu--frame nil)  ; Don't use child frames in terminal
+  :init
+  (global-corfu-mode)
+  ;; Fix for terminal: ensure we use overlay popups, not child frames
+  (unless (display-graphic-p)
+    (setq corfu--frame nil
+          corfu-popupinfo-mode nil))
+  :config
+  ;; Protect against the nil position error
+  (advice-add 'corfu--popup-show :around
+              (lambda (orig &rest args)
+                (condition-case nil
+                    (apply orig args)
+                  (error (message "Corfu popup error suppressed") nil)))))
+
+;; (use-package corfu
+;;   :custom
+;;   (corfu-auto t)
+;;   (corfu-auto-delay 0.1)
+;;   (corfu-auto-prefix 2)
+;;   ;; Minimal terminal settings
+;;   (corfu-popupinfo-mode nil)
+;;   (corfu-terminal-mode +1)
+;;   :config
+;;   ;; Override the position calculation function
+;;   (advice-add 'corfu--popup-show :around
+;;               (lambda (orig &rest args)
+;;                 (condition-case nil
+;;                     (apply orig args)
+;;                   (error nil))))
+;;   :init
+;;   (global-corfu-mode))
+
+;; (use-package corfu
+;;   :custom
+;;   (corfu-auto t)           ; Enable auto completion
+;;   (corfu-auto-delay 0.2)   ; Small delay for better performance
+;;   (corfu-auto-prefix 2)    ; Start after 2 characters
+;;   (corfu-popupinfo-mode t) ; Show documentation popup (optional)
+;;   :init
+;;   (global-corfu-mode))
+
+(use-package cape
+  :after corfu
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-keyword)
+  (add-to-list 'completion-at-point-functions #'cape-elisp-block))
+
+;; --------------------------------------------------
+;; Git
+;; --------------------------------------------------
+
+(use-package magit)
+
+;; --------------------------------------------------
+;; Project management (built-in)
+;; --------------------------------------------------
+
+(use-package project
+  :ensure nil)
+
+;; --------------------------------------------------
+;; Discoverability
+;; --------------------------------------------------
+
+(use-package which-key
+  :init
+  (which-key-mode))
+
+;; --------------------------------------------------
+;; Programming defaults
+;; --------------------------------------------------
+
+(setq-default
+ tab-width 4
+ c-basic-offset 4)
+
+(show-paren-mode 1)
+
+;; --------------------------------------------------
+;; Convenience keybindings
+;; --------------------------------------------------
+
+(global-set-key (kbd "C-c s") 'shell)
+
+;; --------------------------------------------------
+;; macOS shell environment fix
+;; --------------------------------------------------
+
+(use-package exec-path-from-shell
+  :if (eq system-type 'darwin)
+  :config
+  (exec-path-from-shell-initialize))
+
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (setq gc-cons-threshold (* 2 1000 1000))))
+
