@@ -91,67 +91,34 @@
 ;; In-buffer completion
 ;; --------------------------------------------------
 
+(use-package corfu-terminal
+  :ensure t)
+
+(unless (display-graphic-p)
+  (corfu-terminal-mode +1))
+
 (use-package corfu
+  :ensure t
   :custom
   (corfu-auto t)
+  (corfu-cycle t)
   (corfu-auto-delay 0.2)
   (corfu-auto-prefix 2)
-  ;; Terminal-specific settings - these ARE the correct variables
-  (corfu-popupinfo-mode nil)  ; Disable popup info in terminal
-  (corfu-min-width 25)
-  (corfu-max-width 80)
-  (corfu-count 10)
-  ;; Make Corfu work better in terminal
-  (corfu--frame nil)  ; Don't use child frames in terminal
+  (corfu-on-exact-match 'insert)
   :init
-  (global-corfu-mode)
-  ;; Fix for terminal: ensure we use overlay popups, not child frames
-  (unless (display-graphic-p)
-    (setq corfu--frame nil
-          corfu-popupinfo-mode nil))
+  (global-corfu-mode 1)
   :config
-  ;; Protect against the nil position error
-  (advice-add 'corfu--popup-show :around
-              (lambda (orig &rest args)
-                (condition-case nil
-                    (apply orig args)
-                  (error (message "Corfu popup error suppressed") nil)))))
-
-;; (use-package corfu
-;;   :custom
-;;   (corfu-auto t)
-;;   (corfu-auto-delay 0.1)
-;;   (corfu-auto-prefix 2)
-;;   ;; Minimal terminal settings
-;;   (corfu-popupinfo-mode nil)
-;;   (corfu-terminal-mode +1)
-;;   :config
-;;   ;; Override the position calculation function
-;;   (advice-add 'corfu--popup-show :around
-;;               (lambda (orig &rest args)
-;;                 (condition-case nil
-;;                     (apply orig args)
-;;                   (error nil))))
-;;   :init
-;;   (global-corfu-mode))
-
-;; (use-package corfu
-;;   :custom
-;;   (corfu-auto t)           ; Enable auto completion
-;;   (corfu-auto-delay 0.2)   ; Small delay for better performance
-;;   (corfu-auto-prefix 2)    ; Start after 2 characters
-;;   (corfu-popupinfo-mode t) ; Show documentation popup (optional)
-;;   :init
-;;   (global-corfu-mode))
+  (setq corfu-auto t)
+  (setq tab-always-indent 'complete))
 
 (use-package cape
   :after corfu
-  :init
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-keyword)
-  (add-to-list 'completion-at-point-functions #'cape-elisp-block))
-
+  :config
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  (add-hook 'completion-at-point-functions #'cape-file)
+  (add-hook 'completion-at-point-functions #'cape-elisp-block)
+  (add-hook 'completion-at-point-functions #'cape-history))
+ 
 ;; --------------------------------------------------
 ;; Git
 ;; --------------------------------------------------
