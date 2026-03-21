@@ -156,6 +156,12 @@
 
 (global-set-key (kbd "C-c s") 'shell)
 
+(use-package crux
+  :ensure t
+  :bind
+  ("C-k" . crux-kill-whole-line)          ;; replace default C-k
+  ("C-c d" . crux-duplicate-current-line-or-region))
+
 ;; --------------------------------------------------
 ;; macOS shell environment fix
 ;; --------------------------------------------------
