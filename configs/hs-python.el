@@ -1,38 +1,78 @@
-;; The packages you want installed. You can also install these
-;; manually with M-x package-install
-;; Add in your own as you wish:
-(defvar my-python-packages
-  '(elpy             ;; emacs lisp python environment
-    flycheck         ;; on the fly syntax checking
-    blacken   ;; black formattign on save for python code
-    py-autopep8      ;; run autopep8 on save
-	;; jedi
-    ))
+;; Uses python-ts-mode, eglot (Pyright), Corfu+Cape completion, Crux, REPL integration,
+;; Python Black formatting, and Flymake for syntax checking.
 
-(dolist (p my-python-packages)
-  (when (not (package-installed-p p))
-    (package-install p)))
+;; Pre-requisites
+;; 1. brew install pyright
+;; 2. brew install tree-sitter
+;; 3. M-x treesit-install-language-grammar RET python RET - select defaults
+;; ------------------------
+;; Python tree-sitter mode
+;; ------------------------
+(add-to-list 'auto-mode-alist '("\\.py\\'" . python-ts-mode))
 
-(require 'py-autopep8)
+(defun my/python-ts-mode-setup ()
+  "Setup Python development environment for python-ts-mode."
+  ;; Indentation
+  (setq tab-width 4
+        indent-tabs-mode nil)
+  ;; Line numbers
+  (display-line-numbers-mode 1)
+  ;; Flymake (syntax checking)
+  (flymake-mode 1)
+  ;; LSP via eglot
+  (eglot-ensure))
 
-(setq python-shell-interpreter "python")
+(add-hook 'python-ts-mode-hook #'my/python-ts-mode-setup)
 
-(elpy-enable)
+;; ------------------------
+;; Eglot: Python server (Pyright)
+;; ------------------------
+(use-package eglot
+  :ensure t
+  :defer t
+  :config
+  (add-to-list 'eglot-server-programs
+               '(python-ts-mode . ("pyright-langserver" "--stdio"))))
 
-;; Enable Flycheck
-(when (require 'flycheck nil t)
-  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-  (add-hook 'elpy-mode-hook 'flycheck-mode))
+;; ------------------------
+;; REPL integration
+;; ------------------------
+(setq python-shell-interpreter "python3"
+      python-shell-interpreter-args "-i")
 
-;; (add-hook 'python-mode-hook 'jedi:setup)
+(defun my/python-run-buffer ()
+  "Send the current buffer to Python REPL."
+  (interactive)
+  (python-shell-send-buffer))
 
-;; Enable autopep8
-(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+(defun my/python-run-region-or-line ()
+  "Send the current region or line to Python REPL."
+  (interactive)
+  (if (use-region-p)
+      (python-shell-send-region (region-beginning) (region-end))
+    (python-shell-send-region (line-beginning-position)
+                              (line-end-position))))
 
-(add-hook 'elpy-mode-hook (lambda () (highlight-indentation-mode -1)))
-
-(add-hook 'python-mode-hook
+(add-hook 'python-ts-mode-hook
           (lambda ()
-            (local-set-key (kbd "<f5>") 'compile)
-            (set (make-local-variable 'compile-command)
-                 (concat (prefix-home "scripts/runp ") buffer-file-name))))
+            (local-set-key (kbd "C-c C-c") 'my/python-run-buffer)
+            (local-set-key (kbd "C-c C-r") 'my/python-run-region-or-line)
+            (local-set-key (kbd "C-c C-z") 'run-python)))
+
+;; ------------------------
+;; Python Black formatting
+;; ------------------------
+(use-package python-black
+  :ensure t
+  :hook (python-ts-mode . python-black-on-save-mode))
+
+;; ------------------------
+;; Optional: Flymake enhancements
+;; ------------------------
+;; You can also use flycheck if you prefer
+(use-package flymake-python-pyflakes
+  :ensure t
+  :hook (python-ts-mode . flymake-python-pyflakes-load))
+
+(provide 'hs-python)
+;;; hs-python.el ends here

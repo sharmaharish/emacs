@@ -45,9 +45,9 @@
              (expand-file-name "configs" user-emacs-directory))
 
 ;; (require 'hs-default)
-;; (require 'hs-shell)
+(load "hs-shell.el")
 ;; (require 'hs-lisp)
-;; (require 'hs-python)
+(load "hs-python.el")
 
 ;; --------------------------------------------------
 ;; UI / Defaults
@@ -131,6 +131,42 @@
 
 (use-package project
   :ensure nil)
+
+;; --------------------------------------------------
+;; Global Eglot configuration
+;; --------------------------------------------------
+
+(use-package eglot
+  :ensure t
+  :defer t
+  :commands (eglot eglot-ensure)
+  :init
+  ;; Automatically shut down LSP servers when buffers are closed
+  (setq eglot-autoshutdown t)
+
+  ;; Reduce verbosity in minibuffer
+  (setq eglot-ignored-server-capabilities '(:documentHighlightProvider))
+
+  ;; Delay before sending buffer changes to LSP (helps performance)
+  (setq eglot-send-changes-idle-time 0.5)
+
+  ;; Integrate with xref commands (M-. / M-?)
+  (setq eglot-extend-to-xref t)
+
+  ;; Optional: auto-format on save if server supports it
+  :hook
+  (eglot-managed-mode . (lambda ()
+                          (add-hook 'before-save-hook
+                                    #'eglot-format-buffer
+                                    nil t)))
+
+  :config
+  ;; Global keybindings for Eglot
+  (define-key eglot-mode-map (kbd "C-c g r") 'eglot-rename)           ;; rename symbol
+  (define-key eglot-mode-map (kbd "C-c g f") 'eglot-format)           ;; format buffer
+  (define-key eglot-mode-map (kbd "C-c g d") 'xref-find-definitions)  ;; jump to definition
+  (define-key eglot-mode-map (kbd "C-c g i") 'xref-find-implementation)
+  (define-key eglot-mode-map (kbd "C-c g h") 'eldoc))                 ;; hover docs
 
 ;; --------------------------------------------------
 ;; Discoverability
