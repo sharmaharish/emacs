@@ -46,8 +46,9 @@
 
 ;; (require 'hs-default)
 (load "hs-shell.el")
-;; (require 'hs-lisp)
+(load "hs-lisp.el")
 (load "hs-python.el")
+(load "hs-org.el")
 
 ;; --------------------------------------------------
 ;; UI / Defaults
@@ -86,6 +87,20 @@
          ("M-y" . consult-yank-pop)
          ("C-x b" . consult-buffer)))
 ;;         ("M-x" . consult-M-x)))
+
+(use-package embark
+  :ensure t
+  :bind
+  (("C-." . embark-act)
+   ("C-;" . embark-dwim)
+   ("C-h B" . embark-bindings))
+  :init
+  (setq prefix-help-command #'embark-prefix-help-command))
+
+(use-package embark-consult
+  :ensure t
+  :after (embark consult)
+  :demand t)
 
 ;; --------------------------------------------------
 ;; In-buffer completion
@@ -195,7 +210,7 @@
 (use-package crux
   :ensure t
   :bind
-  ("C-k" . crux-kill-whole-line)          ;; replace default C-k
+  ("C-k" . crux-smart-kill-line)
   ("C-c d" . crux-duplicate-current-line-or-region))
 
 ;; --------------------------------------------------

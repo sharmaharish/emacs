@@ -10,7 +10,7 @@
 ;; ------------------------
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-ts-mode))
 
-(defun my/python-ts-mode-setup ()
+(defun hs/python-ts-mode-setup ()
   "Setup Python development environment for python-ts-mode."
   ;; Indentation
   (setq tab-width 4
@@ -22,7 +22,7 @@
   ;; LSP via eglot
   (eglot-ensure))
 
-(add-hook 'python-ts-mode-hook #'my/python-ts-mode-setup)
+(add-hook 'python-ts-mode-hook #'hs/python-ts-mode-setup)
 
 ;; ------------------------
 ;; Eglot: Python server (Pyright)
@@ -40,12 +40,12 @@
 (setq python-shell-interpreter "python3"
       python-shell-interpreter-args "-i")
 
-(defun my/python-run-buffer ()
+(defun hs/python-run-buffer ()
   "Send the current buffer to Python REPL."
   (interactive)
   (python-shell-send-buffer))
 
-(defun my/python-run-region-or-line ()
+(defun hs/python-run-region-or-line ()
   "Send the current region or line to Python REPL."
   (interactive)
   (if (use-region-p)
@@ -55,8 +55,8 @@
 
 (add-hook 'python-ts-mode-hook
           (lambda ()
-            (local-set-key (kbd "C-c C-c") 'my/python-run-buffer)
-            (local-set-key (kbd "C-c C-r") 'my/python-run-region-or-line)
+            (local-set-key (kbd "C-c C-c") 'hs/python-run-buffer)
+            (local-set-key (kbd "C-c C-r") 'hs/python-run-region-or-line)
             (local-set-key (kbd "C-c C-z") 'run-python)))
 
 ;; ------------------------

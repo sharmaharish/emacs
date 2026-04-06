@@ -1,56 +1,49 @@
-;; org-mode
-(defvar my-org-packages
-  '(
-    dash
-    f
-    s
-    ; emacsql
-    magit-section
+(require 'org)
+(require 'org-capture)
 
-    org
-    org-roam
-    org-journal
+(setq org-directory "~/Projects/org")
 
-    visual-fill-column
-    writeroom-mode
-    writegood-mode
-    ))
+(add-hook 'org-mode-hook #'visual-line-mode)
+(add-hook 'org-mode-hook #'org-indent-mode)
 
-(dolist (p my-org-packages)
-  (when (not (package-installed-p p))
-    (package-install p)))
+(defun hs/journal-file ()
+  (expand-file-name
+   (format "journal-%s.org" (format-time-string "%Y"))
+   org-directory))
 
-;; org config
-(setq org-hide-emphasis-markers t)
-(setq org-hide-leading-stars t)
-(setq org-cycle-hide-block-startup t)
-(setq org-log-done-with-time t)
-(setq org-log-done t)
+(defun hs/finance-file ()
+  (expand-file-name
+   (format "finance-%s.org" (format-time-string "%Y"))
+   org-directory))
 
-(font-lock-add-keywords
- 'org-mode
- '(("^ *\\([-]\\) "
-    (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "*")))))) // replace * with proper dot
+(defun hs/open-journal ()
+  "Open current year's journal file."
+  (interactive)
+  (find-file (hs/journal-file)))
 
-(defun hs/org-faces ()
-  (set-face-attribute 'org-level-1 nil :height 1.1)
-  (set-face-attribute 'org-level-2 nil :height 1.0)
-  (set-face-attribute 'org-level-3 nil :height 1.0)
-  (set-face-attribute 'org-level-4 nil :height 1.0)
-  (set-face-attribute 'org-level-5 nil :height 1.0)
-  (set-face-attribute 'org-document-title nil :height 1.2))
+(defun hs/open-finance ()
+  "Open current year's finance file."
+  (interactive)
+  (find-file (hs/finance-file)))
 
-(setq org-agenda-files '("~/Projects/HarishDocuments/org"))
-(setq org-journal-dir "~/Projects/HarishDocuments/journal")
-(setq org-roam-directory (file-truename "~/Projects/HarishDocuments/org-roam"))
+(defun hs/journal-file ()
+  (concat org-directory "/journal-" (format-time-string "%Y") ".org"))
 
-(org-roam-db-autosync-mode)
+(defun hs/finance-file ()
+  (concat org-directory "/finance-" (format-time-string "%Y") ".org"))
 
-(add-hook 'org-mode-hook 'visual-line-mode)
-; (add-hook 'org-mode-hook 'variable-pitch-mode)
-(add-hook 'org-mode-hook 'company-mode)
-(add-hook 'org-mode-hook 'hs/org-faces)
+(setq org-capture-templates
+      '(("j" "Journal"
+         entry
+         (file+olp+datetree (function hs/journal-file))
+         "* %?\nEntered on %U\n")
 
-(global-set-key (kbd "C-c n l") #'org-roam-buffer-toggle)
-(global-set-key (kbd "C-c n f") #'org-roam-node-find)
-(global-set-key (kbd "C-c n i") #'org-roam-node-insert)
+        ("t" "Transaction"
+         entry
+         (file+olp+datetree (function hs/finance-file))
+         "- %^{Description} :%^{Type|expense|income}:%^{Category}: $%^{Amount}\nEntered on %U\n")))
+
+(global-set-key (kbd "C-c c") #'org-capture)
+
+(global-set-key (kbd "C-c o j") #'hs/open-journal)
+(global-set-key (kbd "C-c o f") #'hs/open-finance)

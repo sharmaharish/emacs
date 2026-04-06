@@ -1,42 +1,95 @@
-;; The packages you want installed. You can also install these
-;; manually with M-x package-install
-;; Add in your own as you wish:
-(defvar my-lisp-packages
-  '(paredit              ;; makes handling lisp expression much easier
-    rainbow-delimiters   ;; colorful parenthesis matching
-    slime                ;; superior mode for lisp
-    geiser               ;; superior mode for scheme
-    ))
+;;; hs-lisp.el --- Common Lisp + Emacs Lisp setup (SBCL + SLIME)
 
-(dolist (p my-lisp-packages)
-  (when (not (package-installed-p p))
-    (package-install p)))
+;;; Commentary:
+;; Modern Lisp setup using:
+;; - SBCL (runtime)
+;; - SLIME (REPL + dev)
+;; - Paredit (structural editing)
+;; - Eldoc (documentation)
+;; - Corfu/Cape (completion via CAPF)
 
-;; syntax hilighting for midje
-(add-hook 'lisp-mode-hook
-          (lambda ()
-            (setq inferior-lisp-program "sbcl")
-			(rainbow-delimiters-mode)))
+;;; Code:
 
-;; Automatically load paredit when editing a lisp file
-;; More at http://www.emacswiki.org/emacs/ParEdit
-(autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-(add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
-(add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-(add-hook 'ielm-mode-hook             #'enable-paredit-mode)
-(add-hook 'lisp-mode-hook             #'enable-paredit-mode)
-(add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-(add-hook 'scheme-mode-hook           #'enable-paredit-mode)
+;; ------------------------
+;; SLIME (Common Lisp)
+;; ------------------------
+(use-package slime
+  :ensure t
+  :defer t
+  :init
+  ;; Use SBCL
+  (setq inferior-lisp-program "sbcl")
+  :config
+  ;; Full SLIME experience
+  (slime-setup '(slime-fancy))
 
-;; eldoc-mode shows documentation in the minibuffer when writing code
-;; http://www.emacswiki.org/emacs/ElDoc
-(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-(add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
-(add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
+  ;; REPL history
+  (setq slime-repl-history-file "~/.emacs.d/slime-history.eld"
+        slime-repl-history-size 1000))
 
-(add-hook 'lisp-mode-hook (lambda () (slime-mode t)))
-(add-hook 'inferior-lisp-mode-hook (lambda () (inferior-slime-mode)))
-(slime-setup '(slime-fancy))
+;; ------------------------
+;; Common Lisp Mode Setup
+;; ------------------------
+(defun my/lisp-mode-setup ()
+  "Setup Common Lisp development environment."
+  (slime-mode 1)
 
+  ;; Completion (works with Corfu)
+  (setq-local completion-at-point-functions
+              '(slime-complete-symbol
+                completion-at-point)))
+
+(add-hook 'lisp-mode-hook #'my/lisp-mode-setup)
+
+;; ------------------------
+;; Paredit (Structural Editing)
+;; ------------------------
+(use-package paredit
+  :ensure t
+  :hook ((emacs-lisp-mode
+          lisp-mode
+          lisp-interaction-mode
+          scheme-mode
+          ielm-mode
+          eval-expression-minibuffer-setup
+          slime-repl-mode) . paredit-mode))
+
+;; ------------------------
+;; Eldoc (Documentation)
+;; ------------------------
+(add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
+(add-hook 'lisp-interaction-mode-hook #'eldoc-mode)
+(add-hook 'ielm-mode-hook #'eldoc-mode)
+
+;; ------------------------
+;; Visual Improvements
+;; ------------------------
+(use-package rainbow-delimiters
+  :ensure t
+  :hook ((emacs-lisp-mode lisp-mode scheme-mode) . rainbow-delimiters-mode))
+
+(show-paren-mode 1)
+
+;; ------------------------
+;; Keybindings
+;; ------------------------
+(global-set-key (kbd "C-c s") #'slime)                 ;; start REPL
+(global-set-key (kbd "C-c C-z") #'slime-switch-to-output-buffer)
+
+(with-eval-after-load 'slime
+  ;; Navigation
+  (define-key slime-mode-map (kbd "M-.") #'slime-edit-definition)
+  (define-key slime-mode-map (kbd "M-,") #'slime-pop-find-definition)
+
+  ;; Evaluation
+  (define-key slime-mode-map (kbd "C-c C-c") #'slime-eval-defun)
+  (define-key slime-mode-map (kbd "C-x C-e") #'slime-eval-last-expression))
+
+;; ------------------------
+;; Common Lisp HyperSpec
+;; ------------------------
 (setq common-lisp-hyperspec-root
-	  (concat "file://" (expand-file-name "~/Projects/clisp/HyperSpec/")))
+      "http://www.lispworks.com/documentation/HyperSpec/")
+
+(provide 'hs-lisp)
+;;; hs-lisp.el ends here
