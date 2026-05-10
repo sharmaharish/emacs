@@ -44,11 +44,11 @@
 (add-to-list 'load-path
              (expand-file-name "configs" user-emacs-directory))
 
-;; (require 'hs-default)
 (load "hs-shell.el")
 (load "hs-lisp.el")
 (load "hs-python.el")
 (load "hs-org.el")
+(load "hs-rust.el")
 
 ;; --------------------------------------------------
 ;; UI / Defaults
@@ -76,7 +76,8 @@
 (use-package orderless
   :custom
   (completion-styles '(orderless basic))
-  (completion-category-defaults nil))
+  (completion-category-overrides
+   '((file (styles basic partial-completion)))))
 
 (use-package marginalia
   :init
@@ -152,36 +153,84 @@
 ;; --------------------------------------------------
 
 (use-package eglot
-  :ensure t
+  :ensure nil
   :defer t
   :commands (eglot eglot-ensure)
+
   :init
-  ;; Automatically shut down LSP servers when buffers are closed
+  ;; Shutdown server when last managed buffer closes
   (setq eglot-autoshutdown t)
 
-  ;; Reduce verbosity in minibuffer
-  (setq eglot-ignored-server-capabilities '(:documentHighlightProvider))
+  ;; Reduce noise and memory usage
+  (setq eglot-events-buffer-size 0)
 
-  ;; Delay before sending buffer changes to LSP (helps performance)
-  (setq eglot-send-changes-idle-time 0.5)
+  ;; Faster responsiveness
+  (setq eglot-send-changes-idle-time 0.2)
 
-  ;; Integrate with xref commands (M-. / M-?)
+  ;; Use xref integration (M-. etc.)
   (setq eglot-extend-to-xref t)
 
-  ;; Optional: auto-format on save if server supports it
+  ;; Ignore noisy/high-frequency features
+  (setq eglot-ignored-server-capabilities
+        '(:documentHighlightProvider))
+
+  ;; Better CAPF behavior with Corfu
+  (setq completion-category-defaults nil)
+
   :hook
-  (eglot-managed-mode . (lambda ()
-                          (add-hook 'before-save-hook
-                                    #'eglot-format-buffer
-                                    nil t)))
+  (;; Languages
+   (python-ts-mode . eglot-ensure)
+   (python-mode . eglot-ensure)
+
+   (rust-ts-mode . eglot-ensure)
+
+   (c-ts-mode . eglot-ensure)
+   (c++-ts-mode . eglot-ensure)
+
+   (java-mode . eglot-ensure)
+
+   ;; Optional:
+   ;; (js-ts-mode . eglot-ensure)
+   ;; (typescript-ts-mode . eglot-ensure)
+   ;; (go-ts-mode . eglot-ensure)
+
+   ;; Auto-format on save
+   (eglot-managed-mode . (lambda ()
+                           (add-hook 'before-save-hook
+                                     #'eglot-format-buffer
+                                     nil t))))
 
   :config
-  ;; Global keybindings for Eglot
-  (define-key eglot-mode-map (kbd "C-c g r") 'eglot-rename)           ;; rename symbol
-  (define-key eglot-mode-map (kbd "C-c g f") 'eglot-format)           ;; format buffer
-  (define-key eglot-mode-map (kbd "C-c g d") 'xref-find-definitions)  ;; jump to definition
-  (define-key eglot-mode-map (kbd "C-c g i") 'xref-find-implementation)
-  (define-key eglot-mode-map (kbd "C-c g h") 'eldoc))                 ;; hover docs
+  ;; ------------------------
+  ;; Server definitions
+  ;; ------------------------
+
+  ;; Python (Pyright)
+  (add-to-list 'eglot-server-programs
+               '((python-mode python-ts-mode)
+                 "pyright-langserver" "--stdio"))
+
+  ;; Rust
+  (add-to-list 'eglot-server-programs
+               '(rust-ts-mode . ("rust-analyzer")))
+
+  ;; C / C++
+  ;; clangd usually auto-detected if installed
+
+  ;; ------------------------
+  ;; Keybindings
+  ;; ------------------------
+
+  (define-key eglot-mode-map (kbd "C-c g r") #'eglot-rename)
+  (define-key eglot-mode-map (kbd "C-c g f") #'eglot-format-buffer)
+  (define-key eglot-mode-map (kbd "C-c g a") #'eglot-code-actions)
+
+  (define-key eglot-mode-map (kbd "C-c g d") #'xref-find-definitions)
+  (define-key eglot-mode-map (kbd "C-c g i") #'xref-find-implementations)
+  (define-key eglot-mode-map (kbd "C-c g t") #'xref-find-type-definition)
+  (define-key eglot-mode-map (kbd "C-c g e") #'eglot-find-declaration)
+
+  (define-key eglot-mode-map (kbd "C-c g h") #'eldoc-doc-buffer))
 
 ;; --------------------------------------------------
 ;; Discoverability

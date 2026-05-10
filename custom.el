@@ -7,10 +7,10 @@
  '(column-number-mode t)
  '(kill-whole-line t)
  '(package-selected-packages
-   '(cape consult corfu-terminal crux embark embark-consult
-		  exec-path-from-shell flymake-python-pyflakes macrostep magit
-		  marginalia orderless paredit python-black rainbow-delimiters
-		  slime vertico zenburn-theme))
+   '(cape corfu-terminal crux eat embark-consult exec-path-from-shell
+		  flymake-python-pyflakes magit marginalia orderless paredit
+		  python-black rainbow-delimiters slime vertico vterm
+		  zenburn-theme))
  '(tool-bar-mode nil)
  '(use-short-answers t))
 (custom-set-faces
