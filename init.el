@@ -251,6 +251,15 @@
 (show-paren-mode 1)
 
 ;; --------------------------------------------------
+;; recentf configuration
+;; --------------------------------------------------
+
+;; Enable recentf mode
+(recentf-mode 1)
+(setq recentf-max-saved-items 25)
+(global-set-key (kbd "C-c r") 'recentf-open)
+
+;; --------------------------------------------------
 ;; Convenience keybindings
 ;; --------------------------------------------------
 

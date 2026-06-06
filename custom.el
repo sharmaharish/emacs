@@ -8,9 +8,9 @@
  '(kill-whole-line t)
  '(package-selected-packages
    '(cape corfu-terminal crux eat embark-consult exec-path-from-shell
-		  flymake-python-pyflakes magit marginalia orderless paredit
-		  python-black rainbow-delimiters slime vertico vterm
-		  zenburn-theme))
+		  flymake-python-pyflakes magit marginalia markdown-mode
+		  markdown-preview-eww orderless paredit python-black
+		  rainbow-delimiters slime vertico vterm zenburn-theme))
  '(tool-bar-mode nil)
  '(use-short-answers t))
 (custom-set-faces
